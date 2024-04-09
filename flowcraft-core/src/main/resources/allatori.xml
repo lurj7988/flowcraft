@@ -1,0 +1,24 @@
+<config>
+    <jars>
+        <jar in="${project.build.finalName}.jar" out="${project.build.finalName}.jar" />
+    </jars>
+
+    <keep-names>
+        <class access="protected+">
+            <field access="protected+" />
+            <field template="static *" />
+            <method access="protected+" />
+            <method template="protected+ *(**)" parameters="keep" />
+        </class>
+    </keep-names>
+
+    <ignore-classes>
+        <class template="class com.original.flowcraft.entities.TestSuite" />
+        <class template="class com.original.flowcraft.entities.TestCase" />
+        <class template="class com.original.flowcraft.entities.TestContext" />
+        <class template="class com.original.flowcraft.entities.DriverOptions" />
+        <class template="class com.original.flowcraft.entities.Element" />
+    </ignore-classes>
+
+    <property name="log-file" value="log-${project.build.finalName}.xml" />
+</config>
