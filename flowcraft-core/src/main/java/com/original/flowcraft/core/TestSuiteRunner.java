@@ -6,6 +6,7 @@ import com.original.flowcraft.entities.TestCase;
 import com.original.flowcraft.entities.TestContext;
 import com.original.flowcraft.entities.TestSuite;
 import com.original.flowcraft.utils.ApplicationUtils;
+import com.original.flowcraft.utils.ClassPathUtils;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +15,10 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,14 +55,18 @@ public class TestSuiteRunner {
         } catch (Exception e) {
             log.error("Error occurred while running test suite", e);
         } finally {
-            ObjectMapper objectMapper = new ObjectMapper();
             try {
-                Path path = Paths.get("target", "screenshots");
+                ObjectMapper objectMapper = new ObjectMapper();
+                Path path = Paths.get(ClassPathUtils.getDeployWarPath(), "data");
+                if (!path.toFile().exists() && !path.toFile().mkdirs()) {
+                    log.error("Failed to create directory: " + path);
+                }
                 objectMapper.writeValue(path.resolve(testSuite.getName() + ".json").toFile(), testSuite);
             } catch (IOException e) {
-                log.error("", e);
+                log.error("save test suite failed:", e);
+            } finally {
+                context.getDriver().quit();
             }
-            context.getDriver().quit();
         }
     }
 
@@ -124,18 +129,19 @@ public class TestSuiteRunner {
                 testCase.setFailureMessage(e.getMessage());
                 testCase.setFailureDetails(stringWriter.toString());
                 // 截图
-                if (context.getDriver() instanceof ChromeDriver) {
-                    ChromeDriver driver = (ChromeDriver) context.getDriver();
-                    File sourceFile = driver.getScreenshotAs(OutputType.FILE);
-                    Path path = Paths.get("target", "screenshots");
+                if (context.getDriver() instanceof RemoteWebDriver driver) {
                     try {
+                        File sourceFile = driver.getScreenshotAs(OutputType.FILE);
+                        Path path = Paths.get(ClassPathUtils.getDeployWarPath(), "screenshots");
+                        if (!path.toFile().exists() && !path.toFile().mkdirs()) {
+                            log.error("Failed to create directory: " + path);
+                        }
                         // FileCopyUtils.copy(sourceFile, path.resolve(testCase.getName() + ".png").toFile());
                         FileUtils.copyFile(sourceFile, path.resolve(testCase.getName() + ".png").toFile());
                     } catch (IOException ex) {
                         log.error("Error occurred while copying screenshot", ex);
                     }
                 }
-                // log.error("Error occurred while running test module", e);
                 throw e;
             } finally {
                 Instant endTime = Instant.now();

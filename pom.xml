@@ -33,6 +33,8 @@
         <selenium.version>4.18.1</selenium.version>
         <webdrivermanager.version>5.7.0</webdrivermanager.version>
         <commons-collections4.version>4.4</commons-collections4.version>
+        <poi-ooxml.version>5.2.5</poi-ooxml.version>
+        <commons-compress.version>1.26.1</commons-compress.version>
         <spring-boot.version>3.2.3</spring-boot.version>
         <spring-shell-starter.version>3.2.2</spring-shell-starter.version>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
@@ -76,6 +78,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.original.boot</groupId>
+                <artifactId>spring-boot-original-commons</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-java</artifactId>
                 <version>${selenium.version}</version>
@@ -91,9 +98,24 @@
                 <version>${spring-shell-starter.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework.shell</groupId>
+                <artifactId>spring-shell-starter-jna</artifactId>
+                <version>${spring-shell-starter.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-collections4</artifactId>
                 <version>${commons-collections4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi-ooxml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>

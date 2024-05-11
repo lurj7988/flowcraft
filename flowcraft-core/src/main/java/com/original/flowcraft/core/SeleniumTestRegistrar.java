@@ -42,8 +42,7 @@ public class SeleniumTestRegistrar implements ImportBeanDefinitionRegistrar {
             Set<BeanDefinition> candidateComponents = scan.findCandidateComponents(basePackage);
 
             for (BeanDefinition candidateComponent : candidateComponents) {
-                if (candidateComponent instanceof AnnotatedBeanDefinition) {
-                    AnnotatedBeanDefinition beanDefinition = (AnnotatedBeanDefinition) candidateComponent;
+                if (candidateComponent instanceof AnnotatedBeanDefinition beanDefinition) {
                     // verify annotated class is an interface
 //                    AnnotationMetadata annotationMetadata = beanDefinition.getMetadata();
                     beanDefinition.setScope(BeanDefinition.SCOPE_PROTOTYPE);
